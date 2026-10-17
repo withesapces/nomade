@@ -76,7 +76,7 @@ final List<GameCard> allCards = [
         result: 'La liberté, la vraie. Et le silence.'),
     right: Choice('À deux',
         setFlags: {'duo'},
-        effects: {lie: 8, arg: 5},
+        effects: {lie: 8, arg: 7},
         followups: [Followup('intro2')],
         result: 'Sam a déjà réglé le GPS. Six mètres carrés à deux, ça va être sport.'),
   ),
@@ -87,7 +87,7 @@ final List<GameCard> allCards = [
     once: true,
     text: 'Première nuit. Camping à 25 € avec douches chaudes, '
         'ou spot gratuit au bord d\'un lac, noté 3 étoiles ?',
-    left: Choice('Camping', effects: {arg: -6, mor: 4}, result: 'Douche chaude. Un peu triste quand même.'),
+    left: Choice('Camping', effects: {arg: -4, mor: 4}, result: 'Douche chaude. Un peu triste quand même.'),
     right: Choice('Le lac', outcomes: [
       Outcome(chance: 70, effects: {mor: 10}, text: 'Coucher de soleil sur l\'eau. Tu sais pourquoi tu es parti.'),
       Outcome(chance: 30, effects: {mor: -8}, text: 'Toc toc toc à 2 h du matin. Lampe torche dans la vitre. Tu déménages en pyjama.'),
@@ -108,9 +108,9 @@ final List<GameCard> allCards = [
     left: Choice('Ça attendra',
         setFlags: {'bruit'},
         followups: [Followup('panne_roulement', delay: 4)],
-        effects: {arg: 2},
+        effects: {arg: 3},
         result: 'Tu montes le son de la radio.'),
-    right: Choice('Répare-le', effects: {arg: -14, van: 12}),
+    right: Choice('Répare-le', effects: {arg: -10, van: 12}),
   ),
   GameCard(
     id: 'panne_roulement',
@@ -119,18 +119,18 @@ final List<GameCard> allCards = [
     condition: (s) => s.has('bruit'),
     text: 'Bande d\'arrêt d\'urgence, warnings, fumée. Le roulement a lâché. '
         'Je vous remorque ? C\'est 280 €.',
-    left: Choice('Remorquez', effects: {arg: -22, van: 10}, clearFlags: {'bruit'}),
+    left: Choice('Remorquez', effects: {arg: -15, van: 10}, clearFlags: {'bruit'}),
     right: Choice('Je bricole', clearFlags: {'bruit'}, outcomes: [
       Outcome(chance: 45, effects: {van: 5, mor: 10}, text: 'Tuto YouTube, colliers Serflex, fierté immense. Ça tient.'),
-      Outcome(chance: 55, effects: {van: -18, mor: -8, arg: -10}, text: 'Ça ne tient pas. Tu paies la dépanneuse quand même, deux heures plus tard.'),
+      Outcome(chance: 55, effects: {van: -18, mor: -8, arg: -7}, text: 'Ça ne tient pas. Tu paies la dépanneuse quand même, deux heures plus tard.'),
     ]),
   ),
   GameCard(
     id: 'vidange',
     who: toi,
     text: '15 000 km depuis la dernière vidange. L\'huile ressemble à du café.',
-    left: Choice('Plus tard', effects: {van: -9, arg: 2}),
-    right: Choice('Je la fais moi-même', effects: {arg: -4}, outcomes: [
+    left: Choice('Plus tard', effects: {van: -9, arg: 3}),
+    right: Choice('Je la fais moi-même', effects: {arg: -3}, outcomes: [
       Outcome(chance: 70, effects: {van: 10, mor: 5}, text: 'Mains noires, moteur heureux.'),
       Outcome(chance: 30, effects: {van: 4, mor: -6}, text: 'Bouchon tombé dans le bac. De l\'huile jusqu\'aux coudes.'),
     ]),
@@ -146,10 +146,10 @@ final List<GameCard> allCards = [
     text: '',
     left: Choice('Rouler sans', outcomes: [
       Outcome(chance: 60, effects: {mor: 2}, text: 'Personne ne t\'arrête. Pour l\'instant.'),
-      Outcome(chance: 40, effects: {arg: -18, mor: -5}, counters: {'pv': 1}, text: 'Contrôle routier. Amende. Le gendarme note ta plaque.'),
+      Outcome(chance: 40, effects: {arg: -13, mor: -5}, counters: {'pv': 1}, text: 'Contrôle routier. Amende. Le gendarme note ta plaque.'),
     ]),
     right: Choice('Le passer',
-        dynamicEffects: (s) => s[van] < 40 ? {arg: -24, van: 18} : {arg: -6, van: 3}),
+        dynamicEffects: (s) => s[van] < 40 ? {arg: -17, van: 18} : {arg: -4, van: 3}),
   ),
   GameCard(
     id: 'gerard',
@@ -171,7 +171,7 @@ final List<GameCard> allCards = [
     condition: (s) => s.has('ami_gerard') && s[van] < 45,
     text: 'Encore toi ! Tes freins couinent à 300 mètres. Je te les refais contre un apéro.',
     left: Choice('J\'ai ma fierté', effects: {mor: 3, van: -3}),
-    right: Choice('Marché conclu', effects: {van: 18, arg: -3, lie: 5}),
+    right: Choice('Marché conclu', effects: {van: 18, arg: -2, lie: 5}),
   ),
   GameCard(
     id: 'casse',
@@ -179,7 +179,7 @@ final List<GameCard> allCards = [
     condition: (s) => s[van] < 30,
     text: 'Pièces d\'occasion, tu démontes toi-même. Il y a un van comme le tien au fond.',
     left: Choice('Pas le courage', effects: {van: -3, mor: -2}),
-    right: Choice('Clé de 13 en main', effects: {van: 15, arg: -5, mor: -3}),
+    right: Choice('Clé de 13 en main', effects: {van: 15, arg: -4, mor: -3}),
   ),
   GameCard(
     id: 'collectionneur',
@@ -187,7 +187,7 @@ final List<GameCard> allCards = [
     condition: (s) => s[van] > 70,
     text: 'Superbe restauration. Je vous l\'achète 25 000 €, cash. Vous rachèterez plus petit.',
     left: Choice('Jamais', effects: {mor: 4, van: 2}),
-    right: Choice('Vendre et racheter', effects: {arg: 25, van: -30, mor: -8}, result: 'Le nouveau sent le chien mouillé. Mais il roule.'),
+    right: Choice('Vendre et racheter', effects: {arg: 35, van: -30, mor: -8}, result: 'Le nouveau sent le chien mouillé. Mais il roule.'),
   ),
 
   // =========================================================================
@@ -199,7 +199,7 @@ final List<GameCard> allCards = [
     condition: (s) => !s.has('solaire'),
     text: 'Je revends mon panneau solaire 200 W, 150 €. Avec ça tu ne branches plus jamais rien.',
     left: Choice('Pas besoin', effects: {lie: -2}),
-    right: Choice('Je prends', setFlags: {'solaire'}, effects: {arg: -12, mor: 4}),
+    right: Choice('Je prends', setFlags: {'solaire'}, effects: {arg: -8, mor: 4}),
   ),
   GameCard(
     id: 'batterie_vide',
@@ -207,14 +207,14 @@ final List<GameCard> allCards = [
     condition: (s) => !s.has('solaire'),
     weight: 1.2,
     text: 'Batterie auxiliaire à plat. Le frigo est tiède, le beurre coule.',
-    left: Choice('Rouler pour recharger', effects: {arg: -5, van: -2}),
+    left: Choice('Rouler pour recharger', effects: {arg: -4, van: -2}),
     right: Choice('Tant pis', effects: {mor: -7}),
   ),
   GameCard(
     id: 'toilettes',
     who: toi,
     text: 'La cassette des toilettes est pleine. Prochain point de vidange : 40 km.',
-    left: Choice('Rouler', effects: {arg: -3, van: -2}),
+    left: Choice('Rouler', effects: {arg: -2, van: -2}),
     right: Choice('Euh... la nature', outcomes: [
       Outcome(chance: 70, effects: {mor: -2}, text: 'Pas fier. Mais discret.'),
       Outcome(chance: 30, effects: {lie: -8, mor: -6}, text: 'Un groupe de randonneurs. Tous t\'ont vu.'),
@@ -226,7 +226,7 @@ final List<GameCard> allCards = [
     chainOnly: true,
     condition: (s) => !s.has('chauffage'),
     text: '-6 °C cette nuit. La buée gèle à l\'intérieur des vitres.',
-    left: Choice('Chauffage diesel, 300 €', setFlags: {'chauffage'}, effects: {arg: -22, mor: 8}),
+    left: Choice('Chauffage diesel, 300 €', setFlags: {'chauffage'}, effects: {arg: -15, mor: 8}),
     right: Choice('Une couverture de plus', effects: {mor: -12, lie: 2}),
   ),
   GameCard(
@@ -244,8 +244,8 @@ final List<GameCard> allCards = [
     seasons: {Season.ete},
     regions: france,
     text: '39 °C dans le van à minuit. Le ventilo brasse de l\'air chaud.',
-    left: Choice('Ventilo 12 V de plus', effects: {arg: -6, mor: 3}),
-    right: Choice('Cap sur la montagne', moveTo: Region.alpes, effects: {van: -5, mor: 7, arg: -4}),
+    left: Choice('Ventilo 12 V de plus', effects: {arg: -4, mor: 3}),
+    right: Choice('Cap sur la montagne', moveTo: Region.alpes, effects: {van: -5, mor: 7, arg: -3}),
   ),
   GameCard(
     id: 'orage',
@@ -263,8 +263,8 @@ final List<GameCard> allCards = [
     who: vendeur,
     condition: (s) => s.has('freelance') && !s.has('starlink'),
     text: 'Antenne satellite : internet n\'importe où. 450 € plus l\'abonnement.',
-    left: Choice('Trop cher', effects: {arg: 2}),
-    right: Choice('Je prends', setFlags: {'starlink'}, effects: {arg: -20, mor: 6}),
+    left: Choice('Trop cher', effects: {arg: 3}),
+    right: Choice('Je prends', setFlags: {'starlink'}, effects: {arg: -14, mor: 6}),
   ),
 
   // =========================================================================
@@ -275,18 +275,18 @@ final List<GameCard> allCards = [
     who: client,
     condition: (s) => !s.has('freelance'),
     text: 'Un site WordPress à refaire, trois semaines de boulot. Tu peux bosser depuis le van ?',
-    left: Choice('Je suis en pause de ma vie', effects: {mor: 5, arg: -2}),
-    right: Choice('Envoie le brief', setFlags: {'freelance'}, effects: {arg: 10, mor: -5}),
+    left: Choice('Je suis en pause de ma vie', effects: {mor: 5, arg: -1}),
+    right: Choice('Envoie le brief', setFlags: {'freelance'}, effects: {arg: 14, mor: -5}),
   ),
   GameCard(
     id: 'wifi',
     who: client,
     condition: (s) => s.has('freelance') && !s.has('starlink'),
     text: 'Visio dans 20 minutes, on présente la maquette. Tu as du réseau ?',
-    left: Choice('Je fonce au McDo', effects: {van: -3, arg: -3, mor: -2}),
+    left: Choice('Je fonce au McDo', effects: {van: -3, arg: -2, mor: -2}),
     right: Choice('Je la rate', outcomes: [
       Outcome(chance: 50, effects: {mor: 2}, text: '« Pas de souci, on décale. » Ouf.'),
-      Outcome(chance: 50, effects: {arg: -10, mor: -5}, clearFlags: {'freelance'}, text: 'Il te retire le projet. Mail sec, pas de signature.'),
+      Outcome(chance: 50, effects: {arg: -7, mor: -5}, clearFlags: {'freelance'}, text: 'Il te retire le projet. Mail sec, pas de signature.'),
     ]),
   ),
   GameCard(
@@ -294,8 +294,8 @@ final List<GameCard> allCards = [
     who: toi,
     condition: (s) => s.has('freelance') && s[mor] < 40,
     text: 'Une semaine entière ordinateur sur les genoux. Le lac est à 50 mètres, tu ne l\'as pas vu.',
-    left: Choice('Je coupe tout', clearFlags: {'freelance'}, effects: {mor: 15, arg: -5}),
-    right: Choice('Encore une semaine', effects: {arg: 10, mor: -10}),
+    left: Choice('Je coupe tout', clearFlags: {'freelance'}, effects: {mor: 15, arg: -4}),
+    right: Choice('Encore une semaine', effects: {arg: 14, mor: -10}),
   ),
   GameCard(
     id: 'vendanges',
@@ -303,15 +303,15 @@ final List<GameCard> allCards = [
     seasons: {Season.automne},
     regions: france,
     text: 'Vendanges : trois semaines, payé au SMIC, logé dans le pré. Le dos en compote garanti.',
-    left: Choice('Non merci', effects: {arg: -2}),
-    right: Choice('Je signe', effects: {arg: 20, mor: -9, van: -2, lie: 5}),
+    left: Choice('Non merci', effects: {arg: -1}),
+    right: Choice('Je signe', effects: {arg: 28, mor: -9, van: -2, lie: 5}),
   ),
   GameCard(
     id: 'woofing',
     who: ferme,
     text: 'Woofing : quatre heures de travail par jour, logé nourri, deux semaines.',
-    left: Choice('Pas envie', effects: {mor: 2, arg: -3}),
-    right: Choice('Je mets les bottes', effects: {arg: 9, lie: 6, mor: -4}),
+    left: Choice('Pas envie', effects: {mor: 2, arg: -2}),
+    right: Choice('Je mets les bottes', effects: {arg: 13, lie: 6, mor: -4}),
   ),
   GameCard(
     id: 'marche',
@@ -319,8 +319,8 @@ final List<GameCard> allCards = [
     text: 'Une place libre au marché ce dimanche. Tu pourrais vendre tes tirages photo.',
     left: Choice('Pas mon truc', effects: {mor: -1}),
     right: Choice('Je tente', outcomes: [
-      Outcome(chance: 55, effects: {arg: 10, lie: 5}, text: 'Tout est parti. Une dame veut une commande.'),
-      Outcome(chance: 45, effects: {arg: -3, mor: -5}, text: 'Trois heures sous la pluie, une vente. À ta tante, au téléphone.'),
+      Outcome(chance: 55, effects: {arg: 14, lie: 5}, text: 'Tout est parti. Une dame veut une commande.'),
+      Outcome(chance: 45, effects: {arg: -2, mor: -5}, text: 'Trois heures sous la pluie, une vente. À ta tante, au téléphone.'),
     ]),
   ),
   GameCard(
@@ -329,8 +329,8 @@ final List<GameCard> allCards = [
     condition: (s) => s[arg] < 25,
     weight: 1.5,
     text: 'Plus que 80 € sur le compte. Le plein en coûte 90.',
-    left: Choice('Pâtes à l\'eau un mois', effects: {mor: -8, arg: 6}),
-    right: Choice('Petits boulots via appli', effects: {arg: 12, mor: -4, lie: -2}),
+    left: Choice('Pâtes à l\'eau un mois', effects: {mor: -8, arg: 8}),
+    right: Choice('Petits boulots via appli', effects: {arg: 17, mor: -4, lie: -2}),
   ),
   GameCard(
     id: 'galere',
@@ -339,8 +339,8 @@ final List<GameCard> allCards = [
     text: 'Mon embrayage a lâché. Il me manque 300 € pour repartir. Je te rembourse, promis.',
     left: Choice('Désolé', effects: {lie: -6, mor: -3}),
     right: Choice('Tiens', outcomes: [
-      Outcome(chance: 60, effects: {arg: -20, lie: 10, mor: 5}, text: 'Il t\'envoie une carte postale de Grèce. Pas l\'argent.'),
-      Outcome(chance: 40, effects: {arg: -8, lie: 12, mor: 6}, text: 'Il te rembourse la moitié un mois plus tard. Avec un pot de miel.'),
+      Outcome(chance: 60, effects: {arg: -14, lie: 10, mor: 5}, text: 'Il t\'envoie une carte postale de Grèce. Pas l\'argent.'),
+      Outcome(chance: 40, effects: {arg: -6, lie: 12, mor: 6}, text: 'Il te rembourse la moitié un mois plus tard. Avec un pot de miel.'),
     ]),
   ),
   GameCard(
@@ -349,7 +349,7 @@ final List<GameCard> allCards = [
     condition: (s) => s.region.abroad,
     text: 'Votre carte est bloquée : paiement inhabituel à l\'étranger.',
     left: Choice('Appeler la banque', effects: {mor: -6, arg: -1}),
-    right: Choice('Faire avec le liquide', effects: {arg: -5, lie: -2}),
+    right: Choice('Faire avec le liquide', effects: {arg: -4, lie: -2}),
   ),
 
   // =========================================================================
@@ -362,7 +362,7 @@ final List<GameCard> allCards = [
     text: 'Bonsoir. Le camping sauvage est interdit ici. Vous partez ce soir.',
     left: Choice('Négocier', outcomes: [
       Outcome(chance: 50, effects: {mor: 5}, text: '« Bon. Juste cette nuit. Et rien par terre. »'),
-      Outcome(chance: 50, effects: {arg: -15, mor: -4}, counters: {'pv': 1}, text: 'Il sort le carnet. 135 €.'),
+      Outcome(chance: 50, effects: {arg: -10, mor: -4}, counters: {'pv': 1}, text: 'Il sort le carnet. 135 €.'),
     ]),
     right: Choice('On part', effects: {mor: -6, van: -2}),
   ),
@@ -373,7 +373,7 @@ final List<GameCard> allCards = [
     text: 'Arrêté municipal : stationnement interdit aux véhicules aménagés de 22 h à 7 h.',
     left: Choice('Je reste', outcomes: [
       Outcome(chance: 60, effects: {mor: 3}, text: 'Personne ne passe. Nuit tranquille.'),
-      Outcome(chance: 40, effects: {arg: -15}, counters: {'pv': 1}, text: 'PV sur le pare-brise au réveil.'),
+      Outcome(chance: 40, effects: {arg: -10}, counters: {'pv': 1}, text: 'PV sur le pare-brise au réveil.'),
     ]),
     right: Choice('Je bouge', effects: {mor: -4}),
   ),
@@ -384,7 +384,7 @@ final List<GameCard> allCards = [
     condition: (s) => s.count('pv') >= 2,
     weight: 3,
     text: 'Encore vous. Votre plaque est connue. Cette fois, c\'est la fourrière ou vous payez tout.',
-    left: Choice('Je paie tout', effects: {arg: -25, mor: -6}),
+    left: Choice('Je paie tout', effects: {arg: -18, mor: -6}),
     right: Choice('Je conteste', outcomes: [
       Outcome(chance: 40, effects: {mor: 10}, text: 'Vice de procédure. Le PV saute. Tu repars en sifflant.'),
       Outcome(chance: 60, effects: {}, ending: 'fourriere', text: 'La dépanneuse est déjà là.'),
@@ -398,7 +398,7 @@ final List<GameCard> allCards = [
     left: Choice('Partir tout de suite', effects: {mor: -4}),
     right: Choice('Expliquer en espagnol', outcomes: [
       Outcome(chance: 50, effects: {mor: 6, lie: 3}, text: 'Ton accent les fait rire. Ils te laissent.'),
-      Outcome(chance: 50, effects: {arg: -18}, text: 'Ton accent les fait rire. Ils te verbalisent quand même.'),
+      Outcome(chance: 50, effects: {arg: -13}, text: 'Ton accent les fait rire. Ils te verbalisent quand même.'),
     ]),
   ),
 
@@ -414,7 +414,7 @@ final List<GameCard> allCards = [
     left: Choice('Le chasser', effects: {mor: -6}),
     right: Choice('Monte',
         setFlags: {'chien'},
-        effects: {arg: -6, mor: 12},
+        effects: {arg: -4, mor: 12},
         followups: [Followup('chien_veto', delay: 4)],
         result: 'Tu l\'appelles Gasoil.'),
   ),
@@ -426,9 +426,9 @@ final List<GameCard> allCards = [
     text: 'Vaccins, puce, passeport européen pour Gasoil : 180 €.',
     left: Choice('Trop cher', outcomes: [
       Outcome(chance: 65, effects: {mor: 1}, text: 'Il a l\'air en pleine forme.'),
-      Outcome(chance: 35, effects: {arg: -22, mor: -8}, text: 'Il tombe malade la semaine suivante. Tu paies, et plus cher.'),
+      Outcome(chance: 35, effects: {arg: -15, mor: -8}, text: 'Il tombe malade la semaine suivante. Tu paies, et plus cher.'),
     ]),
-    right: Choice('Je paie', effects: {arg: -15, mor: 3}),
+    right: Choice('Je paie', effects: {arg: -10, mor: 3}),
   ),
   GameCard(
     id: 'chien_saucisson',
@@ -436,7 +436,7 @@ final List<GameCard> allCards = [
     condition: (s) => s.has('chien'),
     text: 'Ton chien vient de partir avec mon saucisson. Entier.',
     left: Choice('C\'est pas le mien', effects: {lie: -8, mor: 3}),
-    right: Choice('Je rembourse en vin', effects: {arg: -5, lie: 9}),
+    right: Choice('Je rembourse en vin', effects: {arg: -4, lie: 9}),
   ),
   GameCard(
     id: 'chien_perdu',
@@ -477,7 +477,7 @@ final List<GameCard> allCards = [
     text: 'On adorerait un post avec notre gourde isotherme. 300 €.',
     left: Choice('Je refuse', effects: {mor: 5}),
     right: Choice('Je pose avec la gourde',
-        effects: {arg: 15, mor: -5},
+        effects: {arg: 21, mor: -5},
         counters: {'insta': 1},
         followups: [Followup('insta_geotag', delay: 3)]),
   ),
@@ -488,7 +488,7 @@ final List<GameCard> allCards = [
     text: 'Ta story géolocalisée cartonne : 20 000 vues. Spot magnifique, très isolé.',
     left: Choice('Retirer la localisation', effects: {mor: -2}),
     right: Choice('Laisser, ça buzze',
-        effects: {arg: 5},
+        effects: {arg: 7},
         counters: {'insta': 1},
         followups: [Followup('cambriolage', delay: 3)]),
   ),
@@ -497,7 +497,7 @@ final List<GameCard> allCards = [
     who: toi,
     chainOnly: true,
     text: 'Retour de rando : vitre arrière éclatée. L\'ordinateur a disparu.',
-    left: Choice('Porter plainte', effects: {arg: -10, van: -8, mor: -10}),
+    left: Choice('Porter plainte', effects: {arg: -7, van: -8, mor: -10}),
     right: Choice('Enquêter via les commentaires', outcomes: [
       Outcome(chance: 35, effects: {mor: 15, lie: 8}, text: 'Tes abonnés retrouvent le voleur sur Leboncoin. Ordi récupéré.'),
       Outcome(chance: 55, effects: {van: -15, mor: -15}, text: 'Rien. Et la vitre coûte une fortune.'),
@@ -509,7 +509,7 @@ final List<GameCard> allCards = [
     who: commentaires,
     condition: (s) => s.has('insta'),
     text: '« Encore un privilégié qui joue au pauvre dans un van à 40 000 €. » 3 000 likes.',
-    left: Choice('Répondre', effects: {mor: -9, arg: 4}, counters: {'insta': 1}),
+    left: Choice('Répondre', effects: {mor: -9, arg: 6}, counters: {'insta': 1}),
     right: Choice('Ignorer', effects: {mor: -3}),
   ),
   GameCard(
@@ -519,7 +519,7 @@ final List<GameCard> allCards = [
     weight: 3,
     condition: (s) => s.count('insta') >= 4,
     text: 'Une plateforme veut une émission sur toi. Contrat d\'exclusivité, cinq ans.',
-    left: Choice('Je supprime le compte', clearFlags: {'insta'}, effects: {mor: 12, arg: -5}),
+    left: Choice('Je supprime le compte', clearFlags: {'insta'}, effects: {mor: 12, arg: -4}),
     right: Choice('Signer', ending: 'influenceur'),
   ),
 
@@ -545,7 +545,7 @@ final List<GameCard> allCards = [
     weight: 2.5,
     text: 'Rappelle maman. Quatre messages vocaux. Elle s\'inquiète vraiment.',
     left: Choice('Plus tard', effects: {lie: -14}),
-    right: Choice('Je rentre une semaine', moveTo: Region.normandie, effects: {lie: 15, arg: -10}),
+    right: Choice('Je rentre une semaine', moveTo: Region.normandie, effects: {lie: 15, arg: -7}),
   ),
   GameCard(
     id: 'maman_poignet',
@@ -556,7 +556,7 @@ final List<GameCard> allCards = [
     left: Choice('Elle dit que ça va', effects: {lie: -10, mor: -5}),
     right: Choice('Je rentre l\'aider',
         moveTo: Region.normandie,
-        effects: {lie: 12, arg: -8},
+        effects: {lie: 12, arg: -6},
         followups: [Followup('rester_famille', delay: 2)]),
   ),
   GameCard(
@@ -579,7 +579,7 @@ final List<GameCard> allCards = [
     left: Choice('Je préfère seul·e', effects: {lie: -4, mor: 2}),
     right: Choice('Convoi !',
         setFlags: {'convoi'},
-        effects: {lie: 10, arg: 3},
+        effects: {lie: 10, arg: 4},
         followups: [Followup('lea_depart', delay: 6)]),
   ),
   GameCard(
@@ -589,7 +589,7 @@ final List<GameCard> allCards = [
     condition: (s) => s.has('convoi'),
     text: 'Je file vers les Alpes. Tu viens ?',
     left: Choice('Nos routes se séparent', clearFlags: {'convoi'}, effects: {lie: -6, mor: -3}),
-    right: Choice('On te suit', clearFlags: {'convoi'}, moveTo: Region.alpes, effects: {lie: 8, arg: -8, van: -3}),
+    right: Choice('On te suit', clearFlags: {'convoi'}, moveTo: Region.alpes, effects: {lie: 8, arg: -6, van: -3}),
   ),
   GameCard(
     id: 'festival',
@@ -626,7 +626,7 @@ final List<GameCard> allCards = [
     who: pote,
     text: 'Je pose une semaine de congés et je te rejoins ! Il y a de la place pour moi ?',
     left: Choice('Pas vraiment', effects: {lie: -8}),
-    right: Choice('Ramène des chips', effects: {lie: 12, arg: -6, mor: 4, van: -2}),
+    right: Choice('Ramène des chips', effects: {lie: 12, arg: -4, mor: 4, van: -2}),
   ),
   GameCard(
     id: 'stoppeur',
@@ -635,7 +635,7 @@ final List<GameCard> allCards = [
     left: Choice('Je passe', effects: {mor: -3}),
     right: Choice('Monte', outcomes: [
       Outcome(chance: 80, effects: {lie: 8, mor: 4}, text: 'Il raconte trois ans de voyage à pied. Tu ne vois pas passer la route.'),
-      Outcome(chance: 20, effects: {arg: -8, mor: -6}, text: 'Il descend à la station. Ta boîte à gants est vide.'),
+      Outcome(chance: 20, effects: {arg: -6, mor: -6}, text: 'Il descend à la station. Ta boîte à gants est vide.'),
     ]),
   ),
   GameCard(
@@ -653,7 +653,7 @@ final List<GameCard> allCards = [
     condition: (s) => s[lie] > 70,
     text: '214 messages non lus. « Et si on organisait le prochain rassemblement chez toi ? »',
     left: Choice('Quitter le groupe', effects: {lie: -12, mor: 5}),
-    right: Choice('Organiser', effects: {lie: 5, arg: -8, mor: -4}),
+    right: Choice('Organiser', effects: {lie: 5, arg: -6, mor: -4}),
   ),
   GameCard(
     id: 'fete_village',
@@ -662,7 +662,7 @@ final List<GameCard> allCards = [
     seasons: {Season.ete, Season.printemps},
     text: 'C\'est la fête au village ! Viens à la buvette, on t\'offre la première.',
     left: Choice('Je reste au calme', effects: {mor: -2}),
-    right: Choice('La deuxième, c\'est moi', effects: {lie: 10, arg: -5, mor: 5}),
+    right: Choice('La deuxième, c\'est moi', effects: {lie: 10, arg: -4, mor: 5}),
   ),
   GameCard(
     id: 'ados',
@@ -680,7 +680,7 @@ final List<GameCard> allCards = [
     regions: {Region.espagne, Region.portugal},
     text: 'Je joue de la guitare tout le trajet si tu m\'emmènes jusqu\'à Lisbonne.',
     left: Choice('Non, désolé', effects: {lie: -3}),
-    right: Choice('En voiture', moveTo: Region.portugal, effects: {lie: 9, mor: 6, arg: -3}),
+    right: Choice('En voiture', moveTo: Region.portugal, effects: {lie: 9, mor: 6, arg: -2}),
   ),
 
   // =========================================================================
@@ -713,7 +713,7 @@ final List<GameCard> allCards = [
     chainOnly: true,
     text: 'Je reviens. Mais il faut qu\'on change des choses. Un vrai rythme, des pauses.',
     left: Choice('Je ne change rien', effects: {lie: -12, mor: 3}),
-    right: Choice('D\'accord', effects: {lie: 15, mor: 5, arg: -3}),
+    right: Choice('D\'accord', effects: {lie: 15, mor: 5, arg: -2}),
   ),
   GameCard(
     id: 'duo_nord',
@@ -721,11 +721,11 @@ final List<GameCard> allCards = [
     once: true,
     condition: (s) => s.has('duo') && s[lie] > 55 && !s.has('objectif_nord'),
     text: 'Et si on montait jusqu\'au Cap Nord ? Le soleil de minuit, tous les deux.',
-    left: Choice('Le Sud plutôt', moveTo: Region.espagne, effects: {mor: 5, arg: -8, van: -4}),
+    left: Choice('Le Sud plutôt', moveTo: Region.espagne, effects: {mor: 5, arg: -6, van: -4}),
     right: Choice('Au Nord !',
         setFlags: {'objectif_nord'},
         moveTo: Region.scandinavie,
-        effects: {mor: 10, arg: -12, van: -6},
+        effects: {mor: 10, arg: -8, van: -6},
         followups: [Followup('nord_route', delay: 3)]),
   ),
 
@@ -742,7 +742,7 @@ final List<GameCard> allCards = [
     right: Choice('Cap au Nord',
         setFlags: {'objectif_nord'},
         moveTo: Region.scandinavie,
-        effects: {mor: 8, arg: -14, van: -6},
+        effects: {mor: 8, arg: -10, van: -6},
         followups: [Followup('nord_route', delay: 3)]),
   ),
   GameCard(
@@ -750,15 +750,15 @@ final List<GameCard> allCards = [
     who: toi,
     chainOnly: true,
     text: 'Norvège. Le plein coûte 2,40 € le litre et chaque virage est une carte postale.',
-    left: Choice('Ralentir, économiser', effects: {arg: 4, mor: -5}, followups: [Followup('nord_ferry', delay: 3)]),
-    right: Choice('Foncer', effects: {arg: -14, van: -8}, followups: [Followup('nordkapp', delay: 3)]),
+    left: Choice('Ralentir, économiser', effects: {arg: 6, mor: -5}, followups: [Followup('nord_ferry', delay: 3)]),
+    right: Choice('Foncer', effects: {arg: -10, van: -8}, followups: [Followup('nordkapp', delay: 3)]),
   ),
   GameCard(
     id: 'nord_ferry',
     who: toi,
     chainOnly: true,
     text: 'Ferry côtier ou route des fjords, plus longue et plus raide ?',
-    left: Choice('Ferry', effects: {arg: -12, mor: 3}, followups: [Followup('nordkapp', delay: 2)]),
+    left: Choice('Ferry', effects: {arg: -8, mor: 3}, followups: [Followup('nordkapp', delay: 2)]),
     right: Choice('Les fjords', effects: {van: -12, mor: 12}, followups: [Followup('nordkapp', delay: 3)]),
   ),
   GameCard(
@@ -770,7 +770,7 @@ final List<GameCard> allCards = [
         ? 'Cap Nord à 30 km. Nuit polaire, route verglacée, convoi derrière un chasse-neige.'
         : 'Cap Nord à 30 km. Une tempête arrive de la mer de Barents.',
     text: '',
-    left: Choice('Attendre une fenêtre', effects: {mor: -5, arg: -5}, followups: [Followup('nordkapp', delay: 2)]),
+    left: Choice('Attendre une fenêtre', effects: {mor: -5, arg: -4}, followups: [Followup('nordkapp', delay: 2)]),
     right: Choice('Y aller maintenant', outcomes: [
       Outcome(chance: 65, ending: 'cap_nord', text: 'Tu y es.'),
       Outcome(chance: 35, effects: {van: -22, mor: -10}, followups: [Followup('nordkapp', delay: 3)], text: 'Rafales à 110 km/h. Demi-tour, rétroviseur arraché.'),
@@ -786,7 +786,7 @@ final List<GameCard> allCards = [
         : 'Tu devrais descendre au Portugal. Le spot est désert hors saison, tu verras.',
     text: '',
     left: Choice('Je reste', effects: {mor: -3}),
-    right: Choice('Cap au sud', moveTo: Region.portugal, effects: {arg: -12, van: -6, mor: 10}),
+    right: Choice('Cap au sud', moveTo: Region.portugal, effects: {arg: -8, van: -6, mor: 10}),
   ),
   GameCard(
     id: 'surf',
@@ -794,7 +794,7 @@ final List<GameCard> allCards = [
     regions: {Region.portugal},
     text: 'Cours de surf gratuits si tu m\'aides à refaire le site de mon école.',
     left: Choice('Je préfère le hamac', effects: {mor: 4}),
-    right: Choice('Deal', effects: {lie: 8, mor: 8, arg: -2}),
+    right: Choice('Deal', effects: {lie: 8, mor: 8, arg: -1}),
   ),
   GameCard(
     id: 'tarifa',
@@ -806,7 +806,7 @@ final List<GameCard> allCards = [
     right: Choice('Embarquer',
         moveTo: Region.maroc,
         setFlags: {'maroc_fait'},
-        effects: {arg: -10, mor: 12},
+        effects: {arg: -7, mor: 12},
         followups: [Followup('douane', delay: 1)]),
   ),
   GameCard(
@@ -815,7 +815,7 @@ final List<GameCard> allCards = [
     regions: {Region.portugal},
     text: 'L\'Algarve est envahie de camping-cars. L\'Andalousie est à deux heures.',
     left: Choice('Je reste ici', effects: {mor: -3, lie: 3}),
-    right: Choice('Andalousie', moveTo: Region.espagne, effects: {arg: -6, van: -3, mor: 5}),
+    right: Choice('Andalousie', moveTo: Region.espagne, effects: {arg: -4, van: -3, mor: 5}),
   ),
   GameCard(
     id: 'douane',
@@ -825,7 +825,7 @@ final List<GameCard> allCards = [
     left: Choice('Patienter', effects: {mor: -8}),
     right: Choice('Proposer le café', outcomes: [
       Outcome(chance: 60, effects: {lie: 6, mor: 4}, text: 'Thé à la menthe partagé. On te conseille un spot.'),
-      Outcome(chance: 40, effects: {mor: -10, arg: -5}, text: 'Mal pris. Deux heures de plus.'),
+      Outcome(chance: 40, effects: {mor: -10, arg: -4}, text: 'Mal pris. Deux heures de plus.'),
     ]),
   ),
   GameCard(
@@ -834,7 +834,7 @@ final List<GameCard> allCards = [
     regions: {Region.maroc},
     text: 'Je te refais la boîte de vitesses pour dix fois moins cher qu\'en France. Garanti.',
     left: Choice('Pas confiance', effects: {van: -3}),
-    right: Choice('Vas-y', effects: {arg: -8}, outcomes: [
+    right: Choice('Vas-y', effects: {arg: -6}, outcomes: [
       Outcome(chance: 75, effects: {van: 25, lie: 4}, text: 'Travail d\'orfèvre. Il refuse le pourboire.'),
       Outcome(chance: 25, effects: {van: -10}, text: 'La troisième ne passe plus. « Garanti » avait un sens flou.'),
     ]),
@@ -854,7 +854,7 @@ final List<GameCard> allCards = [
     minTurn: 6,
     text: 'Le mal du pays : une baguette, un fromage qui pue, une petite pluie fine.',
     left: Choice('Pas encore', effects: {mor: -4}),
-    right: Choice('Remonter en Bretagne', moveTo: Region.bretagne, effects: {arg: -12, mor: 6, lie: 6, van: -4}),
+    right: Choice('Remonter en Bretagne', moveTo: Region.bretagne, effects: {arg: -8, mor: 6, lie: 6, van: -4}),
   ),
   GameCard(
     id: 'pyrenees',
@@ -863,7 +863,7 @@ final List<GameCard> allCards = [
     condition: (s) => s.region != Region.pyrenees,
     text: 'Les Pyrénées sont à une journée de route. Lacs, cols, brebis.',
     left: Choice('Pas maintenant', effects: {mor: -1}),
-    right: Choice('Go', moveTo: Region.pyrenees, effects: {arg: -6, van: -3, mor: 6}),
+    right: Choice('Go', moveTo: Region.pyrenees, effects: {arg: -4, van: -3, mor: 6}),
   ),
   GameCard(
     id: 'col',
@@ -882,10 +882,10 @@ final List<GameCard> allCards = [
     regions: {Region.alpes, Region.pyrenees},
     seasons: {Season.hiver},
     text: 'Vingt centimètres de neige fraîche. Tu n\'as pas de chaînes.',
-    left: Choice('Acheter des chaînes', effects: {arg: -8, van: 2}),
+    left: Choice('Acheter des chaînes', effects: {arg: -6, van: 2}),
     right: Choice('Ça passe', outcomes: [
       Outcome(chance: 50, effects: {mor: 6}, text: 'Ça passe. Tu ris nerveusement.'),
-      Outcome(chance: 50, effects: {van: -14, arg: -12}, text: 'Fossé. Dépanneuse. Facture.'),
+      Outcome(chance: 50, effects: {van: -14, arg: -8}, text: 'Fossé. Dépanneuse. Facture.'),
     ]),
   ),
   GameCard(
@@ -894,7 +894,7 @@ final List<GameCard> allCards = [
     regions: littoral,
     text: 'Dors dans mon champ si tu veux. En échange, tu m\'aides à ramasser les pommes ?',
     left: Choice('Je passe', effects: {lie: -2}),
-    right: Choice('Les pommes', effects: {lie: 8, mor: 5, arg: 3}),
+    right: Choice('Les pommes', effects: {lie: 8, mor: 5, arg: 4}),
   ),
   GameCard(
     id: 'maree',
@@ -903,9 +903,9 @@ final List<GameCard> allCards = [
     text: 'Tu t\'es garé sur la plage ? La marée monte vite, ici. Très vite.',
     left: Choice('Je fonce', outcomes: [
       Outcome(chance: 80, effects: {mor: 4}, text: 'Les roues patinent, puis accrochent. Ouf.'),
-      Outcome(chance: 20, effects: {van: -18, arg: -10}, text: 'Ensablé. L\'eau arrive aux jantes.'),
+      Outcome(chance: 20, effects: {van: -18, arg: -7}, text: 'Ensablé. L\'eau arrive aux jantes.'),
     ]),
-    right: Choice('Votre tracteur ?', effects: {arg: -6, lie: 6}),
+    right: Choice('Votre tracteur ?', effects: {arg: -4, lie: 6}),
   ),
   GameCard(
     id: 'spot_choix',
@@ -941,7 +941,7 @@ final List<GameCard> allCards = [
     weight: 1.4,
     text: 'Tout est parfait. Le café, la vue, le silence. Trop parfait ?',
     left: Choice('Savourer', effects: {mor: 6}),
-    right: Choice('Se lancer un défi', effects: {mor: -10, arg: 4, van: -2}, result: 'Tu t\'inscris à un trail de 40 km. Tu le regretteras au km 12.'),
+    right: Choice('Se lancer un défi', effects: {mor: -10, arg: 6, van: -2}, result: 'Tu t\'inscris à un trail de 40 km. Tu le regretteras au km 12.'),
   ),
   GameCard(
     id: 'anniversaire',

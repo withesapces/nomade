@@ -32,7 +32,8 @@ jobs:
           flutter test --reporter expanded 2>&1 | tee test.log
           status=${PIPESTATUS[0]}
           grep -E "Tours moyens" test.log | sed 's/^/::notice::/'
-          grep -E "\[E\]|Expected:|Actual:|Which:|Reason:|Exception|Error:|failed" test.log | head -25 | sed 's/^/::error::/'
+          grep -A14 "EXCEPTION CAUGHT" test.log | head -40 | sed 's/^/::error::/'
+          grep -E "\[E\]|Expected:|Actual:|Which:|Reason:" test.log | head -20 | sed 's/^/::error::/'
           exit $status
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
