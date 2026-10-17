@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../data/endings.dart';
 import 'game_screen.dart';
@@ -40,60 +41,58 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
           children: [
-            const Text('🚐', textAlign: TextAlign.center, style: TextStyle(fontSize: 72)),
-            const SizedBox(height: 8),
-            const Text(
-              'NOMADE',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 44,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 10,
-                color: Palette.sunset,
-              ),
+            AspectRatio(
+              aspectRatio: 342 / 200,
+              child: SvgPicture.asset('assets/home.svg', semanticsLabel: 'Un van roule vers le soleil couchant'),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 20),
+            Text('NOMADE', textAlign: TextAlign.center, style: display(56, color: Palette.sunset, spacing: 6)),
+            const SizedBox(height: 10),
             const Text(
-              'Swipe à gauche, swipe à droite.\nGarde ton van, ton moral, ton argent et tes liens en équilibre.',
+              'Swipe à gauche, swipe à droite. Garde ton van, ton moral, ton argent et tes liens en équilibre.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Palette.dust, height: 1.4),
+              style: TextStyle(color: Palette.dust, height: 1.45, fontSize: 15),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 28),
             FilledButton(
               onPressed: _play,
               style: FilledButton.styleFrom(
                 backgroundColor: Palette.sunset,
                 foregroundColor: Palette.asphalt,
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                minimumSize: const Size.fromHeight(60),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                textStyle: const TextStyle(fontFamily: 'Instrument', fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              child: const Text('Prendre la route'),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Prendre la route'),
+                  SizedBox(width: 10),
+                  NIcon('fleche', size: 22, color: Palette.asphalt),
+                ],
+              ),
             ),
             const SizedBox(height: 28),
             if (p != null) ...[
               Row(
                 children: [
                   _Stat(label: 'Record', value: '${p.bestDays} j'),
+                  const SizedBox(width: 8),
                   _Stat(label: 'Parties', value: '${p.games}'),
+                  const SizedBox(width: 8),
                   _Stat(label: 'Fins', value: '${p.endings.length}/${endings.length}'),
                 ],
               ),
-              const SizedBox(height: 24),
-              const Text('FINS DÉCOUVERTES',
-                  style: TextStyle(color: Palette.dust, letterSpacing: 2, fontSize: 12)),
+              const SizedBox(height: 28),
+              const Text('FINS DÉCOUVERTES', style: TextStyle(color: Palette.dust, letterSpacing: 2, fontSize: 12)),
               const SizedBox(height: 12),
               Wrap(
-                spacing: 10,
-                runSpacing: 10,
+                spacing: 8,
+                runSpacing: 8,
                 children: [
-                  for (final e in endings)
-                    _EndingChip(
-                      unlocked: p.endings.contains(e.id),
-                      emoji: e.emoji,
-                      title: e.title,
-                    ),
+                  for (final e in endings) _EndingChip(unlocked: p.endings.contains(e.id), title: e.title),
                 ],
               ),
             ],
@@ -119,12 +118,16 @@ class _Stat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        children: [
-          Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
-          const SizedBox(height: 2),
-          Text(label, style: const TextStyle(color: Palette.dust, fontSize: 12)),
-        ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(color: Palette.asphaltLight, borderRadius: BorderRadius.circular(16)),
+        child: Column(
+          children: [
+            Text(value, style: display(24)),
+            const SizedBox(height: 4),
+            Text(label, style: const TextStyle(color: Palette.dust, fontSize: 12)),
+          ],
+        ),
       ),
     );
   }
@@ -132,9 +135,8 @@ class _Stat extends StatelessWidget {
 
 class _EndingChip extends StatelessWidget {
   final bool unlocked;
-  final String emoji;
   final String title;
-  const _EndingChip({required this.unlocked, required this.emoji, required this.title});
+  const _EndingChip({required this.unlocked, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -142,13 +144,19 @@ class _EndingChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Palette.asphaltLight,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: unlocked ? Palette.sunset.withValues(alpha: 0.5) : Colors.transparent),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: unlocked ? Palette.chipBorder : Colors.transparent),
       ),
-      child: Text(
-        unlocked ? '$emoji  $title' : '❔  ???',
-        style: TextStyle(color: unlocked ? Palette.cream : Palette.dust, fontSize: 13),
-      ),
+      child: unlocked
+          ? Text(title, style: const TextStyle(color: Palette.cream, fontSize: 13))
+          : const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NIcon('cadenas', size: 13, color: Palette.dust, label: 'Fin non découverte'),
+                SizedBox(width: 6),
+                Text('???', style: TextStyle(color: Palette.dust, fontSize: 13)),
+              ],
+            ),
     );
   }
 }

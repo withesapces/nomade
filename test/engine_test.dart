@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -33,6 +34,15 @@ void main() {
             expect(specialEndings.keys, contains(id), reason: c.id);
           }
         }
+      }
+    });
+
+    test('chaque personnage et chaque fin a son illustration', () {
+      for (final c in allCards) {
+        expect(File(c.who.asset).existsSync(), isTrue, reason: c.who.asset);
+      }
+      for (final e in allEndings) {
+        expect(File(e.asset).existsSync(), isTrue, reason: e.asset);
       }
     });
 

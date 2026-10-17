@@ -37,6 +37,13 @@ class GaugesBar extends StatelessWidget {
   }
 }
 
+String iconFor(Stat s) => switch (s) {
+      Stat.argent => 'argent',
+      Stat.moral => 'moral',
+      Stat.van => 'van',
+      Stat.liens => 'liens',
+    };
+
 class _Gauge extends StatelessWidget {
   final Stat stat;
   final int value;
@@ -63,59 +70,66 @@ class _Gauge extends StatelessWidget {
                 ? Palette.danger
                 : Palette.sunset;
 
-    final mag = previewMagnitude;
-    final dotSize = mag == null || mag == 0 ? 0.0 : (mag >= 10 ? 12.0 : 7.0);
+    // L'icône passe en sombre quand le remplissage la recouvre.
+    final iconColor = (value >= 55 && flash == 0 && !danger) ? Palette.asphalt : Palette.cream;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          height: 16,
-          child: Center(
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              width: dotSize,
-              height: dotSize,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: risky ? Colors.transparent : Palette.cream,
-                border: risky ? Border.all(color: Palette.cream, width: 2) : null,
+    final mag = previewMagnitude;
+    final dotSize = mag == null || mag == 0 ? 0.0 : (mag >= 10 ? 13.0 : 8.0);
+
+    return Semantics(
+      label: '${stat.label} : ${danger ? 'en danger' : 'stable'}',
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 16,
+            child: Center(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                width: dotSize,
+                height: dotSize,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: risky ? Colors.transparent : Palette.cream,
+                  border: risky ? Border.all(color: Palette.cream, width: 2) : null,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Container(
-          width: 52,
-          height: 64,
-          decoration: BoxDecoration(
-            color: Palette.asphaltLight,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              TweenAnimationBuilder<double>(
-                tween: Tween(end: value / 100),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOutCubic,
-                builder: (_, f, __) => FractionallySizedBox(
-                  heightFactor: f.clamp(0.0, 1.0),
-                  widthFactor: 1,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    color: fillColor.withValues(alpha: 0.85),
+          const SizedBox(height: 4),
+          Container(
+            width: 60,
+            height: 72,
+            decoration: BoxDecoration(
+              color: Palette.asphaltLight,
+              borderRadius: BorderRadius.circular(16),
+              border: danger ? Border.all(color: Palette.danger, width: 2) : null,
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                TweenAnimationBuilder<double>(
+                  tween: Tween(end: value / 100),
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeOutCubic,
+                  builder: (_, f, __) => FractionallySizedBox(
+                    heightFactor: f.clamp(0.0, 1.0),
+                    widthFactor: 1,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      color: fillColor,
+                    ),
                   ),
                 ),
-              ),
-              Center(child: Text(stat.icon, style: const TextStyle(fontSize: 26))),
-            ],
+                Center(child: NIcon(iconFor(stat), size: 28, color: iconColor)),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(stat.label, style: const TextStyle(fontSize: 11, color: Palette.dust)),
-      ],
+          const SizedBox(height: 4),
+          Text(stat.label, style: const TextStyle(fontSize: 11, color: Palette.dust)),
+        ],
+      ),
     );
   }
 }

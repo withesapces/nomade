@@ -20,6 +20,10 @@ jobs:
       - name: Générer le dossier Android
         run: flutter create . --project-name nomade --platforms android --org fr.webeedigital
       - run: flutter pub get
+      - name: Icône et nom de l'app
+        run: |
+          dart run flutter_launcher_icons
+          sed -i 's/android:label="nomade"/android:label="Nomade"/' android/app/src/main/AndroidManifest.xml
       - run: flutter analyze --no-fatal-infos --no-fatal-warnings
       - run: flutter test
       - run: flutter build apk --release

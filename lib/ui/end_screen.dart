@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../data/endings.dart';
 import '../engine/models.dart';
@@ -47,45 +48,41 @@ class _EndScreenState extends State<EndScreen> {
     final e = widget.ending;
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
+        child: LayoutBuilder(
+          builder: (context, box) => SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: box.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
             children: [
               const Spacer(),
-              Text(e.emoji, style: const TextStyle(fontSize: 88)),
-              const SizedBox(height: 16),
-              Text(
-                e.title.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 3,
-                  color: Palette.sunset,
-                ),
-              ),
+              SvgPicture.asset(e.asset, width: 240, height: 180, semanticsLabel: e.title),
+              const SizedBox(height: 20),
+              Text(e.title.toUpperCase(), textAlign: TextAlign.center, style: display(32, color: Palette.sunset, spacing: 3)),
               if (_isNew) ...[
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 const Text('Nouvelle fin découverte', style: TextStyle(color: Palette.sage, fontSize: 13)),
               ],
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               Text(
                 e.text,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 17, height: 1.5),
+                style: const TextStyle(fontSize: 17, height: 1.55),
               ),
-              const SizedBox(height: 28),
-              Text(
-                '${widget.days} jours sur la route',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-              ),
+              const SizedBox(height: 24),
+              Text('${widget.days}', style: display(40)),
+              const Text('jours sur la route', style: TextStyle(fontSize: 15)),
               if (_record == true)
-                const Padding(
-                  padding: EdgeInsets.only(top: 4),
-                  child: Text('Nouveau record', style: TextStyle(color: Palette.sage)),
+                Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(color: Palette.asphaltLight, borderRadius: BorderRadius.circular(999)),
+                  child: const Text('Nouveau record', style: TextStyle(color: Palette.sage, fontSize: 13)),
                 ),
-              const SizedBox(height: 6),
-              Text('$_found / ${allEndings.length} fins', style: const TextStyle(color: Palette.dust)),
+              const SizedBox(height: 8),
+              Text('$_found / ${allEndings.length} fins', style: const TextStyle(color: Palette.dust, fontSize: 13)),
+              const SizedBox(height: 24),
               const Spacer(),
               FilledButton(
                 onPressed: () => Navigator.of(context).pushReplacement(
@@ -94,8 +91,9 @@ class _EndScreenState extends State<EndScreen> {
                 style: FilledButton.styleFrom(
                   backgroundColor: Palette.sunset,
                   foregroundColor: Palette.asphalt,
-                  minimumSize: const Size.fromHeight(56),
-                  textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+                  minimumSize: const Size.fromHeight(58),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                  textStyle: const TextStyle(fontFamily: 'Instrument', fontSize: 17, fontWeight: FontWeight.w600),
                 ),
                 child: const Text('Repartir'),
               ),
@@ -108,6 +106,9 @@ class _EndScreenState extends State<EndScreen> {
               ),
               const SizedBox(height: 12),
             ],
+                ),
+              ),
+            ),
           ),
         ),
       ),

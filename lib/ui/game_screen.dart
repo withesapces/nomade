@@ -162,7 +162,7 @@ class _GameScreenState extends State<GameScreen> {
           const SizedBox(height: 12),
           Text(
             _card.who.name,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Palette.sunset),
+            style: display(17, color: Palette.sunset),
           ),
         ],
       ),
@@ -184,14 +184,28 @@ class _GameScreenState extends State<GameScreen> {
               Text(
                 _resultText!,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20, height: 1.4, fontStyle: FontStyle.italic),
+                style: const TextStyle(fontSize: 22, height: 1.45, fontStyle: FontStyle.italic),
               ),
             for (final e in _events) ...[
-              const SizedBox(height: 16),
-              Text(e, textAlign: TextAlign.center, style: const TextStyle(color: Palette.sunset, fontSize: 16)),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Palette.asphaltLight,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    NIcon(e.contains('Hiver') ? 'hiver' : 'saison', size: 18, color: Palette.sunset),
+                    const SizedBox(width: 10),
+                    Text(e, style: const TextStyle(color: Palette.sunset, fontSize: 15)),
+                  ],
+                ),
+              ),
             ],
-            const SizedBox(height: 40),
-            const Text('Touche pour continuer', style: TextStyle(color: Palette.dust, fontSize: 12)),
+            const SizedBox(height: 48),
+            const Text('Touche pour continuer', style: TextStyle(color: Palette.dust, fontSize: 13)),
           ],
         ),
       ),
@@ -200,24 +214,27 @@ class _GameScreenState extends State<GameScreen> {
 
   Widget _buildFooter() {
     final s = _s;
-    final badges = <String>[
-      if (s.has('chien')) '🐕',
-      if (s.has('solaire')) '☀️',
-      if (s.has('chauffage')) '🔥',
-      if (s.has('freelance')) '💻',
-      if (s.has('starlink')) '📡',
-      if (s.has('insta')) '📸',
-      if (s.has('duo')) '💞',
-      if (s.has('amour') && s.has('solo')) '💌',
-      if (s.has('convoi')) '🚌',
-      if (s.has('objectif_nord')) '🧭',
+    final badges = <(String, String)>[
+      if (s.has('chien')) ('chien', 'Chien'),
+      if (s.has('solaire')) ('solaire', 'Panneau solaire'),
+      if (s.has('chauffage')) ('chauffage', 'Chauffage'),
+      if (s.has('freelance')) ('freelance', 'Freelance'),
+      if (s.has('starlink')) ('starlink', 'Internet satellite'),
+      if (s.has('insta')) ('insta', 'Compte Instagram'),
+      if (s.has('duo')) ('duo', 'En couple'),
+      if (s.has('amour') && s.has('solo')) ('amour', 'Une histoire'),
+      if (s.has('convoi')) ('convoi', 'En convoi'),
+      if (s.has('objectif_nord')) ('nord', 'Cap au Nord'),
     ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
       child: Column(
         children: [
           if (badges.isNotEmpty)
-            Text(badges.join('  '), style: const TextStyle(fontSize: 18)),
+            Wrap(
+              spacing: 14,
+              children: [for (final b in badges) NIcon(b.$1, size: 20, color: Palette.dust, label: b.$2)],
+            ),
           const SizedBox(height: 6),
           Text(
             'Jour ${s.day}  ·  ${s.season.label}  ·  ${s.region.label}',

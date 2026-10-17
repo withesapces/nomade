@@ -150,7 +150,10 @@ class Character {
   final String name;
   final String emoji;
   final int color; // ARGB
-  const Character(this.name, this.emoji, this.color);
+  final String art; // nom du fichier dans assets/characters/
+  const Character(this.name, this.emoji, this.color, {required this.art});
+
+  String get asset => 'assets/characters/$art.svg';
 }
 
 class GameCard {
@@ -202,6 +205,8 @@ class Ending {
   final String text;
   final String emoji;
   const Ending(this.id, this.title, this.emoji, this.text);
+
+  String get asset => 'assets/endings/$id.svg';
 }
 
 class PendingCard {

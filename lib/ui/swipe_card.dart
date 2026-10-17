@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../engine/models.dart';
 import 'theme.dart';
@@ -72,7 +73,6 @@ class _SwipeCardState extends State<SwipeCard> with SingleTickerProviderStateMix
         : t < -0.15
             ? widget.leftLabel
             : null;
-    final base = Color(widget.who.color);
 
     return GestureDetector(
       onHorizontalDragStart: (_) => _ctrl.stop(),
@@ -96,53 +96,42 @@ class _SwipeCardState extends State<SwipeCard> with SingleTickerProviderStateMix
         child: Transform.rotate(
           angle: _dx / 900 * math.pi / 2,
           child: AspectRatio(
-            aspectRatio: 0.82,
+            aspectRatio: 290 / 354,
             child: Container(
               decoration: BoxDecoration(
+                color: Color(widget.who.color),
                 borderRadius: BorderRadius.circular(28),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color.lerp(base, Colors.white, 0.15)!,
-                    Color.lerp(base, Colors.black, 0.35)!,
-                  ],
-                ),
                 boxShadow: const [
                   BoxShadow(color: Colors.black54, blurRadius: 24, offset: Offset(0, 12)),
                 ],
               ),
+              clipBehavior: Clip.antiAlias,
               child: Stack(
+                fit: StackFit.expand,
                 children: [
-                  Center(
-                    child: Text(widget.who.emoji, style: const TextStyle(fontSize: 120)),
+                  SvgPicture.asset(
+                    widget.who.asset,
+                    fit: BoxFit.cover,
+                    semanticsLabel: widget.who.name,
                   ),
                   // Voile sombre + libellé du choix en haut
-                  Positioned.fill(
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 120),
-                      opacity: label == null ? 0 : 1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(28),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.center,
-                            colors: [Colors.black87, Colors.transparent],
-                          ),
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 120),
+                    opacity: label == null ? 0 : 1,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.center,
+                          colors: [Color(0xEE141210), Color(0x00141210)],
                         ),
-                        alignment: t > 0 ? Alignment.topRight : Alignment.topLeft,
-                        padding: const EdgeInsets.all(22),
-                        child: Text(
-                          label ?? '',
-                          textAlign: t > 0 ? TextAlign.right : TextAlign.left,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
-                            color: Palette.cream,
-                            height: 1.15,
-                          ),
-                        ),
+                      ),
+                      alignment: t > 0 ? Alignment.topRight : Alignment.topLeft,
+                      padding: const EdgeInsets.all(22),
+                      child: Text(
+                        label ?? '',
+                        textAlign: t > 0 ? TextAlign.right : TextAlign.left,
+                        style: display(25),
                       ),
                     ),
                   ),
