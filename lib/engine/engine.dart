@@ -209,7 +209,8 @@ class GameEngine {
     void add(Stat k, int v) => d[k] = (d[k] ?? 0) + v;
 
     // Coût de la vie, variable selon la région.
-    final cost = s.region.costFactor;
+    // Calibré par simulation : à 1,0 la ruine arrivait dans 68 % des parties.
+    final cost = s.region.costFactor * 0.6;
     if (s.rng.nextDouble() < cost.clamp(0, 1)) add(Stat.argent, -1);
     if (cost > 1 && s.rng.nextDouble() < cost - 1) add(Stat.argent, -1);
 

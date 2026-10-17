@@ -104,6 +104,8 @@ void main() {
       print('Tours moyens : ${avg.toStringAsFixed(1)}  Fins : $endings');
       expect(avg, greaterThan(15));
       expect(endings.length, greaterThanOrEqualTo(6));
+      final worst = endings.values.reduce((a, b) => a > b ? a : b);
+      expect(worst / games, lessThan(0.55), reason: 'une fin domine : $endings');
     });
   });
 }

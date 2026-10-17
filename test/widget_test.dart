@@ -9,6 +9,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('NOMADE'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Prendre la route'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Prendre la route'));
     await tester.pumpAndSettle();
     expect(find.text('Seul·e'), findsNothing); // libellé visible seulement en glissant
