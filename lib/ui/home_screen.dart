@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Prendre la route'),
+                  Flexible(child: Text('Prendre la route', overflow: TextOverflow.ellipsis)),
                   SizedBox(width: 10),
                   NIcon('fleche', size: 22, color: Palette.asphalt),
                 ],
